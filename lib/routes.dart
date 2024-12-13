@@ -5,8 +5,10 @@ import 'package:test_ai/screens/gemini/create_document.dart';
 import 'package:test_ai/services/ai_service.dart';
 
 import 'screens/index.dart';
+import 'services/file_service.dart';
 
 final aiService = AiService();
+final fileService = FileService();
 
 /// The route configuration.
 final GoRouter appRoutes = GoRouter(
@@ -22,7 +24,9 @@ final GoRouter appRoutes = GoRouter(
       routes: [
         GoRoute(
           path: '/gemini',
-          pageBuilder: (context, state) => const MaterialPage(child: GeminiPage()),
+          pageBuilder: (context, state) => MaterialPage(
+            child: GeminiPage(fileService: fileService),
+          ),
           routes: [
             GoRoute(
               path: 'chat',
@@ -30,7 +34,6 @@ final GoRouter appRoutes = GoRouter(
                 aiService: aiService,
               ),
             ),
-
             GoRoute(
               path: 'create-document',
               builder: (context, state) => GeminiCreateDocumentPage(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:test_ai/env.dart';
 
@@ -22,6 +24,34 @@ class GeminiClient {
     );
   }
 
+  Future<String?> prompt(
+    String prompt, {
+    List<String>? filePaths,
+    int maxOutputTokens = 2000,
+  }) async {
+    final fileContents = filePaths == null ? [] : await Future.wait(filePaths.map((f) => File(f).readAsBytes()));
+
+    final content = filePaths == null
+        ? [Content.text(prompt)]
+        : [
+            Content.multi([
+              TextPart(prompt),
+              ...fileContents.map((image) => DataPart('image/jpeg', image)),
+            ])
+          ];
+
+    final response = await _model.generateContent(
+      content,
+      generationConfig: GenerationConfig(
+        maxOutputTokens: maxOutputTokens,
+      ),
+    );
+
+    print('response $response');
+
+    return response.text;
+  }
+
   Future<void> startChat() async {
     chat = client.startChat();
   }
@@ -33,18 +63,4 @@ class GeminiClient {
     return response.text;
   }
 
-  Future<String?> createDocument(String topic) async {
-    final prompt = 'Viết đoạn văn bản về chủ đề $topic.';
-    final content = [Content.text(prompt)];
-    final response = await _model.generateContent(
-      content,
-      generationConfig: GenerationConfig(
-        maxOutputTokens: 2000,
-      ),
-    );
-
-    print('response $response');
-
-    return response.text;
-  }
 }
