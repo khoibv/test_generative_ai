@@ -85,6 +85,8 @@ class GeminiPage extends StatelessWidget {
                 'mua điện thoại iphone 16 xs max giá hơn hai chục triệu',
                 'ăn trưa quên mang tiền nợ chủ quán 30k',
                 'đi uống bia hết 500k',
+                'sếp thưởng nóng 1 triệu',
+                'rút tiền ATM 500k đi chơi',
               ];
 
               final String? selected = await showModalBottomSheet<String>(
